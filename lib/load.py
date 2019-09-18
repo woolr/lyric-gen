@@ -19,13 +19,18 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.optimizers import Adam, SGD
 
 import keras.backend as K
+
+# TODO: Move to TF2 version tf.keras etc.
 if len(K.tensorflow_backend._get_available_gpus()) > 0:
     from keras.layers import CuDNNLSTM as LSTM
     from keras.layers import CuDNNGRU as GRU
 
 
 def load_input_texts():
+    """
 
+
+    """
     input_texts = []
     target_texts = []
     for line in open('Output.txt'):
@@ -45,11 +50,16 @@ def load_input_texts():
 
 
 def load_pretrained_wordvecs():
+    """
+
+    Environ var that defines path to pre-trained models
+
+    """
     # options for other word models?
 
     # load in pre-trained word vectors
     print('Loading word vectors...')
-    word2vec = {}
+    word2vec_map = {}
 
     # TODO: add env var for path to models
     with open(os.path.join(f'glove.6B/glove.6B.{str(EMBEDDING_DIM)}sd.txt')) as f:
@@ -59,5 +69,7 @@ def load_pretrained_wordvecs():
             values = line.split()
             word = values[0]
             vec = np.asarray(values[1:], dtype='float32')
-            word2vec[word] = vec
-    print('Found %s word vectors.' % len(word2vec))
+            word2vec_map[word] = vec
+    print('Found %s word vectors.' % len(word2vec_map))
+
+    return word2vec_map
