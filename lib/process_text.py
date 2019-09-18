@@ -5,7 +5,6 @@ import string
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 
 from keras.layers import Dense, Embedding, Input, LSTM
 from keras.models import Model
@@ -42,7 +41,7 @@ def tokenize_corpus():
     input_sequences = tokenizer.texts_to_sequences(input_texts)
     target_sequences = tokenizer.texts_to_sequences(target_texts)
 
-    # find max sequence length
+    # find max sequence length from the actual data
     max_sequence_length_from_data = max(len(s) for s in input_sequences)
     if verbose:
         print('Max sequence length:', max_sequence_length_from_data)
@@ -54,28 +53,7 @@ def tokenize_corpus():
     assert('<SOS>' in word2idx)
     assert('<EOS>' in word2idx)
 
-    return input_sequences, target_sequences, tokenizer, word2idx
+    # Get words from index
+    idx2word = {v:k for k, v in word2idx.items()}
 
-
-def pad_sequences():
-    """
-    Ensures that sequences all have the same length
-
-    TODO:  Explain reason for this
-
-    Parameters
-    ----------
-
-    Returns
-    ----------
-
-    Raises
-    ----------
-    """
-    # pad sequences so that we get a N x T matrix
-    max_sequence_length = min(max_sequence_length_from_data, MAX_SEQUENCE_LENGTH)
-    input_sequences = pad_sequences(input_sequences, maxlen=max_sequence_length, padding='post')
-    target_sequences = pad_sequences(target_sequences, maxlen=max_sequence_length, padding='post')
-    print('Shape of data tensor:', input_sequences.shape)
-    # TODO: Do I need to return max sequence length too?
-    return input_sequences, target_sequences
+    return input_sequences, target_sequences, tokenizer, word2idx, idx2word

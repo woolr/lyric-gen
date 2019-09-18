@@ -8,12 +8,23 @@ Compile model
 
 """
 
-print('Building model...')
+def make_embedding_layer():
+    # load pre-trained word embeddings into an Embedding layer
+    embedding_layer = Embedding(
+      num_words,
+      EMBEDDING_DIM,
+      weights=[embedding_matrix],
+      # trainable=False
+    )
+
+
 def build_model():
     """
 
     """
     # create an LSTM network with a single LSTM
+
+    print('Building model...')
     input_ = Input(shape=(max_sequence_length,))
     initial_h = Input(shape=(latent_dimensions,))
     initial_c = Input(shape=(latent_dimensions,))

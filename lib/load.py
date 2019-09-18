@@ -62,7 +62,7 @@ def load_pretrained_wordvecs():
     word2vec_map = {}
 
     # TODO: add env var for path to models
-    with open(os.path.join(f'glove.6B/glove.6B.{str(EMBEDDING_DIM)}sd.txt')) as f:
+    with open(os.path.join(f'glove.6B/glove.6B.{str(embedding_dimension)}sd.txt')) as f:
       # is just a space-separated text file in the format:
       # word vec[0] vec[1] vec[2] ...
         for line in f:
@@ -72,4 +72,4 @@ def load_pretrained_wordvecs():
             word2vec_map[word] = vec
     print('Found %s word vectors.' % len(word2vec_map))
 
-    return word2vec_map
+    return word2vec_map, idx2word
