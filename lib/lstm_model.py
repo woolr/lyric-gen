@@ -7,18 +7,11 @@ Build Model
 Compile model
 
 """
+from keras.layers import Dense, Embedding, Input, LSTM
+from keras.models import Model
+from keras.optimizers import Adam, SGD
 
-def make_embedding_layer():
-    # load pre-trained word embeddings into an Embedding layer
-    embedding_layer = Embedding(
-      num_words,
-      EMBEDDING_DIM,
-      weights=[embedding_matrix],
-      # trainable=False
-    )
-
-
-def build_model():
+def build_model(max_sequence_length, latent_dimensions, embedding_layer, num_words):
     """
 
     """
@@ -37,7 +30,7 @@ def build_model():
     return [input_, initial_h, initial_c], output
 
 
-def compile_model():
+def compile_model(input_, initial_h, initial_c, output):
     """
 
     """

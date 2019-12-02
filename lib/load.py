@@ -16,7 +16,6 @@ from keras.models import Model
 from keras.layers import Dense, Embedding, Input, LSTM
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
-from keras.optimizers import Adam, SGD
 
 import keras.backend as K
 
@@ -26,14 +25,14 @@ if len(K.tensorflow_backend._get_available_gpus()) > 0:
     from keras.layers import CuDNNGRU as GRU
 
 
-def load_input_texts():
+def load_input_texts(input_path):
     """
 
 
     """
     input_texts = []
     target_texts = []
-    for line in open('Output.txt'):
+    for line in open(input_path):
         line = line.rstrip()
         if not line:
             continue
@@ -46,10 +45,10 @@ def load_input_texts():
 
     all_lines = input_texts + target_texts
 
-    return all_lines
+    return all_lines, input_texts, target_texts
 
 
-def load_pretrained_wordvecs():
+def load_pretrained_wordvecs(embedding_dimension):
     """
 
     Environ var that defines path to pre-trained models
@@ -62,7 +61,8 @@ def load_pretrained_wordvecs():
     word2vec_map = {}
 
     # TODO: add env var for path to models
-    with open(os.path.join(f'glove.6B/glove.6B.{str(embedding_dimension)}sd.txt')) as f:
+    # TODO: Proper Data Path
+    with open(os.path.join(f'/Users/dan/Files/Generative/glove.6B/glove.6B.{str(embedding_dimension)}d.txt')) as f:
       # is just a space-separated text file in the format:
       # word vec[0] vec[1] vec[2] ...
         for line in f:
@@ -71,5 +71,4 @@ def load_pretrained_wordvecs():
             vec = np.asarray(values[1:], dtype='float32')
             word2vec_map[word] = vec
     print('Found %s word vectors.' % len(word2vec_map))
-
-    return word2vec_map, idx2word
+    return word2vec_map
