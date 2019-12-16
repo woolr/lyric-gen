@@ -54,9 +54,10 @@ def tokenize_corpus(all_lines, input_texts, target_texts, max_vocab_size=20000, 
     assert('<EOS>' in word2idx)
 
     # Get words from index
-    idx2word = {v:k for k, v in word2idx.items()}
+    idx2word = {v: k for k, v in word2idx.items()}
 
-    return input_sequences, target_sequences, tokenizer, word2idx, idx2word, max_sequence_length_from_data
+    return (input_sequences, target_sequences, tokenizer,
+            word2idx, idx2word, max_sequence_length_from_data)
 
 
 def prepare_sequences(input_sequences, target_sequences, msl_data, msl_user):

@@ -62,9 +62,10 @@ def load_pretrained_wordvecs(embedding_dimension):
 
     # TODO: add env var for path to models
     # TODO: Proper Data Path
-    with open(os.path.join(f'/Users/dan/Files/Generative/glove.6B/glove.6B.{str(embedding_dimension)}d.txt')) as f:
-      # is just a space-separated text file in the format:
-      # word vec[0] vec[1] vec[2] ...
+    with open(os.path.join(
+            f'/Users/dan/Files/Generative/glove.6B/glove.6B.{str(embedding_dimension)}d.txt')) as f:
+        # is just a space-separated text file in the format:
+        # word vec[0] vec[1] vec[2] ...
         for line in f:
             values = line.split()
             word = values[0]

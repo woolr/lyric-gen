@@ -25,15 +25,18 @@ lines, input_texts, target_texts = load_input_texts("/Users/dan/Files/Generative
 word2vec_map = load_pretrained_wordvecs(embedding_dimension=embedding_dim)
 
 input_sequences, target_sequences, tokenizer, word2idx, idx2word, max_sequence_length_from_data = \
-tokenize_corpus(lines, input_texts, target_texts, max_vocab_size)
+    tokenize_corpus(lines, input_texts, target_texts, max_vocab_size)
 
-input_sequences, target_sequences, max_sequence_length = prepare_sequences(input_sequences, target_sequences, max_sequence_length_from_data, max_sequence_length)
+input_sequences, target_sequences, max_sequence_length = prepare_sequences(
+    input_sequences, target_sequences, max_sequence_length_from_data, max_sequence_length)
 
 print(max_sequence_length)
 
-embedding_matrix, num_words = prep_embedding_matrix(word2idx, word2vec_map, max_vocab_size, embedding_dim)
+embedding_matrix, num_words = prep_embedding_matrix(
+    word2idx, word2vec_map, max_vocab_size, embedding_dim)
 
-one_hot_targets = generate_one_hot_targets(input_sequences, target_sequences, max_sequence_length, num_words)
+one_hot_targets = generate_one_hot_targets(
+    input_sequences, target_sequences, max_sequence_length, num_words)
 
 
 embedding_layer = make_embedding_layer(embedding_matrix, embedding_dim, num_words)
@@ -44,7 +47,7 @@ embedding_layer = make_embedding_layer(embedding_matrix, embedding_dim, num_word
 model = compile_model(input_, initial_h, initial_c, output)
 
 r = train_model(model, one_hot_targets, input_sequences, latent_dim,
-  batch_size, epochs, validation_split)
+                batch_size, epochs, validation_split)
 
 plt.plot(r.history['loss'], label='loss')
 plt.plot(r.history['val_loss'], label='val_loss')
