@@ -1,6 +1,7 @@
 # Setup
 import numpy as np
-from keras.layers import Embedding
+from tensorflow.keras.layers import Embedding
+
 
 def prep_embedding_matrix(word2idx, word2vec, max_vocab_size, embedding_dimension):
     """
@@ -38,9 +39,9 @@ def generate_one_hot_targets(input_sequences, target_sequences, max_sequence_len
 def make_embedding_layer(embedding_matrix, embedding_dimension, num_words):
     # load pre-trained word embeddings into an Embedding layer
     embedding_layer = Embedding(
-      num_words,
-      embedding_dimension,  # pass-thru
-      weights=[embedding_matrix],
+        num_words,
+        embedding_dimension,  # pass-thru
+        weights=[embedding_matrix],
     )
 
     return embedding_layer

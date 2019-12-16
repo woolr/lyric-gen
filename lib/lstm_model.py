@@ -7,9 +7,10 @@ Build Model
 Compile model
 
 """
-from keras.layers import Dense, Embedding, Input, LSTM
-from keras.models import Model
-from keras.optimizers import Adam, SGD
+from tensorflow.keras.layers import Dense, Embedding, Input, LSTM
+from tensorflow.keras.models import Model
+from tensorflow.keras.optimizers import Adam
+
 
 def build_model(max_sequence_length, latent_dimensions, embedding_layer, num_words):
     """
@@ -23,7 +24,7 @@ def build_model(max_sequence_length, latent_dimensions, embedding_layer, num_wor
     initial_c = Input(shape=(latent_dimensions,))
     x = embedding_layer(input_)
     lstm = LSTM(latent_dimensions, return_sequences=True, return_state=True)
-    x, _, _ = lstm(x, initial_state=[initial_h, initial_c]) # don't need the states here
+    x, _, _ = lstm(x, initial_state=[initial_h, initial_c])  # don't need the states here
     dense = Dense(num_words, activation='softmax')
     output = dense(x)
 
@@ -36,11 +37,11 @@ def compile_model(input_, initial_h, initial_c, output):
     """
     model = Model([input_, initial_h, initial_c], output)
     model.compile(
-      loss='categorical_crossentropy',
-      # optimizer='rmsprop',
-      optimizer=Adam(lr=0.01),
-      # optimizer=SGD(lr=0.01, momentum=0.9),
-      metrics=['accuracy'] # not meaningful here
+        loss='categorical_crossentropy',
+        # optimizer='rmsprop',
+        optimizer=Adam(lr=0.01),
+        # optimizer=SGD(lr=0.01, momentum=0.9),
+        metrics=['accuracy']  # not meaningful here
     )
 
     return model
