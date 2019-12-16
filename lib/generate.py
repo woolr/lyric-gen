@@ -74,12 +74,11 @@ if __name__ == '__main__':
     sampling_model = make_sample_model(embedding_layer, embedding_dim,
                                        initial_h, initial_c, num_words)
 
-    sample_line(sampling_model, latent_dim, word2idx, idx2word, max_sequence_length)
-
     # generate a 4 line poem
     while True:
         for _ in range(4):
-            print(sample_line())
+            line = sample_line(sampling_model, latent_dim, word2idx, idx2word, max_sequence_length)
+            print(line)
 
         ans = input("---generate another? [Y/n]---")
         if ans and ans[0].lower().startswith('n'):
