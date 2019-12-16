@@ -5,13 +5,14 @@
 import argparse
 import matplotlib.pyplot as plt
 
-from load import load_input_texts, load_pretrained_wordvecs
+from data_load import load_input_texts, load_pretrained_wordvecs
 from process_text import tokenize_corpus, prepare_sequences
 from embedding import prep_embedding_matrix, make_embedding_layer, generate_one_hot_targets
 from lstm_model import build_model, compile_model
 from train import train_model
 
 
+# TODO: Make all these guys arguments
 max_sequence_length = 100
 max_vocab_size = 20000
 embedding_dim = 50
@@ -19,6 +20,7 @@ validation_split = 0.2
 batch_size = 128
 epochs = 3
 latent_dim = 25
+verbose = True  # Set up proper ogging
 
 
 def parse_args():
