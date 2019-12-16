@@ -52,11 +52,14 @@ def make_sample_model(embedding_layer, latent_dimensions,
     # make a sampling model
     input_layer = Input(shape=(1,))  # only input one word at a time
     x = embedding_layer(input_layer)
+
     # now we need states to feed back in
     lstm = LSTM(latent_dimensions, return_sequences=True, return_state=True)
+
     x, h, c = lstm(x, initial_state=[initial_h, initial_c])
     dense = Dense(num_words, activation='softmax')
     output_layer = dense(x)
+
     sampling_model = Model([input_layer, initial_h, initial_c], [output_layer, h, c])
     if save:
         sampling_model.save("model_name.lstmmodel")

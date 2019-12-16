@@ -71,7 +71,7 @@ if __name__ == '__main__':
     plt.legend()
     plt.show()
 
-    sampling_model = make_sample_model(embedding_layer, embedding_dim,
+    sampling_model = make_sample_model(embedding_layer, latent_dim,
                                        initial_h, initial_c, num_words)
 
     # generate a 4 line poem
