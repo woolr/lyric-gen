@@ -7,9 +7,9 @@ Build Model
 Compile model
 
 """
-from keras.layers import Dense, Embedding, Input, LSTM
-from keras.models import Model
-from keras.optimizers import Adam
+from tensorflow.keras.layers import Dense, Embedding, Input, LSTM
+from tensorflow.keras.models import Model
+from tensorflow.keras.optimizers import Adam
 
 
 def build_model(max_sequence_length, latent_dimensions, embedding_layer, num_words):

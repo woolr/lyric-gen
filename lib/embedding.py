@@ -1,6 +1,6 @@
 # Setup
 import numpy as np
-from keras.layers import Embedding
+from tensorflow.keras.layers import Embedding
 
 
 def prep_embedding_matrix(word2idx, word2vec, max_vocab_size, embedding_dimension):
