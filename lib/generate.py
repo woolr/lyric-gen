@@ -19,7 +19,7 @@ max_vocab_size = 20000
 embedding_dim = 50
 validation_split = 0.2
 batch_size = 128
-epochs = 3
+# epochs = 3
 latent_dim = 25
 verbose = True  # Set up proper ogging
 
@@ -27,6 +27,7 @@ verbose = True  # Set up proper ogging
 def parse_args():
     parser = argparse.ArgumentParser(description="Args ")
     parser.add_argument('--file-path', type=str, default='~/data.txt')
+    parser.add_argument('--epochs', type=int, default=3)
     return parser.parse_args()
 
 
@@ -58,7 +59,7 @@ if __name__ == '__main__':
     model = compile_model(input_, initial_h, initial_c, output)
 
     trained_model = train_model(model, one_hot_targets, input_sequences, latent_dim,
-                                batch_size, epochs, validation_split)
+                                batch_size, args.epochs, validation_split)
 
     plt.plot(trained_model.history['loss'], label='loss')
     plt.plot(trained_model.history['val_loss'], label='val_loss')
@@ -74,7 +75,7 @@ if __name__ == '__main__':
     sampling_model = make_sample_model(embedding_layer, latent_dim,
                                        initial_h, initial_c, num_words)
 
-    # generate a 4 line poem
+    # generate a 4 review
     while True:
         for _ in range(4):
             line = sample_line(sampling_model, latent_dim, word2idx, idx2word, max_sequence_length)
