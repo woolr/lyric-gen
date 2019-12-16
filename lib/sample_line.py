@@ -4,12 +4,12 @@ import numpy as np
 
 def sample_line(sampling_model, latent_dimensions, word2idx, idx2word, max_sequence_length):
     # initial inputs
-    np_input = np.array([[word2idx['<sos>']]])
+    np_input = np.array([[word2idx['<SOS>']]])
     h = np.zeros((1, latent_dimensions))
     c = np.zeros((1, latent_dimensions))
 
     # so we know when to quit
-    eos = word2idx['<eos>']
+    eos = word2idx['<EOS>']
 
     # store the output here
     output_sentence = []
