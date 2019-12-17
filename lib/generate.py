@@ -14,7 +14,7 @@ from sample_line import sample_line
 
 
 # TODO: Make all these guys arguments
-max_sequence_length = 100
+max_sequence_length = 20
 max_vocab_size = 20000
 embedding_dim = 50
 validation_split = 0.2

@@ -48,7 +48,7 @@ def compile_model(input_, initial_h, initial_c, output):
 
 
 def make_sample_model(embedding_layer, latent_dimensions,
-                      initial_h, initial_c, num_words, save=False):
+                      initial_h, initial_c, num_words, save=True):
     # make a sampling model
     input_layer = Input(shape=(1,))  # only input one word at a time
     x = embedding_layer(input_layer)
@@ -62,5 +62,5 @@ def make_sample_model(embedding_layer, latent_dimensions,
 
     sampling_model = Model([input_layer, initial_h, initial_c], [output_layer, h, c])
     if save:
-        sampling_model.save("model_name.lstmmodel")
+        sampling_model.save("~/Limbo/generate_data/model_name.lstmmodel")
     return sampling_model

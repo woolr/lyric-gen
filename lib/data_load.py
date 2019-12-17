@@ -21,8 +21,8 @@ def load_input_texts(input_path):
         if not line:
             continue
 
-        input_line = '<SOS> ' + line
-        target_line = line + ' <EOS>'
+        input_line = '<sos> ' + line
+        target_line = line + ' <eos>'
 
         input_texts.append(input_line)
         target_texts.append(target_line)
