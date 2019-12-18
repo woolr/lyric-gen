@@ -25,7 +25,7 @@ def tokenize_corpus(all_lines, input_texts, target_texts, max_vocab_size=20000, 
 
     # convert the sentences (strings) into integers
     # filters='' - means that we don't filter out special characters like "<" and ">"
-    tokenizer = Tokenizer(num_words=max_vocab_size, filters='', lower=True)
+    tokenizer = Tokenizer(num_words=max_vocab_size, filters=".'", lower=True)
     tokenizer.fit_on_texts(all_lines)
     input_sequences = tokenizer.texts_to_sequences(input_texts)
     target_sequences = tokenizer.texts_to_sequences(target_texts)

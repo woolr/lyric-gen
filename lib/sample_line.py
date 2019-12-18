@@ -14,8 +14,23 @@ def sample_line(sampling_model, latent_dimensions, word2idx, idx2word, max_seque
     # store the output here
     output_sentence = []
 
-    for _ in range(max_sequence_length):
+    for number in range(max_sequence_length):
         o, h, c = sampling_model.predict([np_input, h, c])
+
+        if number == 0:
+            word_one = word2idx['this']
+            output_sentence.append(idx2word.get(word_one, '<WTF %s>' % word_one))
+            continue
+
+        if number == 1:
+            word_one = word2idx['movie']
+            output_sentence.append(idx2word.get(word_one, '<WTF %s>' % word_one))
+            continue
+
+        if number == 2:
+            word_one = word2idx['is']
+            output_sentence.append(idx2word.get(word_one, '<WTF %s>' % word_one))
+            continue
 
         # print("o.shape:", o.shape, o[0,0,:10])
         # idx = np.argmax(o[0,0])
