@@ -5,25 +5,29 @@
 import argparse
 import matplotlib.pyplot as plt
 
-from load import load_input_texts, load_pretrained_wordvecs
+from data_load import load_input_texts, load_pretrained_wordvecs
 from process_text import tokenize_corpus, prepare_sequences
 from embedding import prep_embedding_matrix, make_embedding_layer, generate_one_hot_targets
-from lstm_model import build_model, compile_model
+from lstm_model import build_model, compile_model, make_sample_model
 from train import train_model
+from sample_line import sample_line
 
 
-max_sequence_length = 100
+# TODO: Make all these guys arguments
+max_sequence_length = 10
 max_vocab_size = 20000
 embedding_dim = 50
 validation_split = 0.2
 batch_size = 128
-epochs = 3
+# epochs = 3
 latent_dim = 25
+verbose = True  # Set up proper ogging
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Args ")
     parser.add_argument('--file-path', type=str, default='~/data.txt')
+    parser.add_argument('--epochs', type=int, default=3)
     return parser.parse_args()
 
 
@@ -54,16 +58,29 @@ if __name__ == '__main__':
 
     model = compile_model(input_, initial_h, initial_c, output)
 
-    r = train_model(model, one_hot_targets, input_sequences, latent_dim,
-                    batch_size, epochs, validation_split)
+    trained_model = train_model(model, one_hot_targets, input_sequences, latent_dim,
+                                batch_size, args.epochs, validation_split)
 
-    plt.plot(r.history['loss'], label='loss')
-    plt.plot(r.history['val_loss'], label='val_loss')
+    plt.plot(trained_model.history['loss'], label='loss')
+    plt.plot(trained_model.history['val_loss'], label='val_loss')
     plt.legend()
     plt.show()
 
     # accuracies
-    plt.plot(r.history['accuracy'], label='acc')
-    plt.plot(r.history['val_accuracy'], label='val_acc')
+    plt.plot(trained_model.history['accuracy'], label='acc')
+    plt.plot(trained_model.history['val_accuracy'], label='val_acc')
     plt.legend()
     plt.show()
+
+    sampling_model = make_sample_model(embedding_layer, latent_dim,
+                                       initial_h, initial_c, num_words)
+
+    # generate a 4 review
+    while True:
+        for _ in range(4):
+            line = sample_line(sampling_model, latent_dim, word2idx, idx2word, max_sequence_length)
+            print(line)
+
+        ans = input("---generate another? [Y/n]---")
+        if ans and ans[0].lower().startswith('n'):
+            break

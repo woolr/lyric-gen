@@ -7,7 +7,7 @@ Build Model
 Compile model
 
 """
-from tensorflow.keras.layers import Dense, Embedding, Input, LSTM
+from tensorflow.keras.layers import Dense, Input, LSTM
 from tensorflow.keras.models import Model
 from tensorflow.keras.optimizers import Adam
 
@@ -45,3 +45,22 @@ def compile_model(input_, initial_h, initial_c, output):
     )
 
     return model
+
+
+def make_sample_model(embedding_layer, latent_dimensions,
+                      initial_h, initial_c, num_words, save=True):
+    # make a sampling model
+    input_layer = Input(shape=(1,))  # only input one word at a time
+    x = embedding_layer(input_layer)
+
+    # now we need states to feed back in
+    lstm = LSTM(latent_dimensions, return_sequences=True, return_state=True)
+
+    x, h, c = lstm(x, initial_state=[initial_h, initial_c])
+    dense = Dense(num_words, activation='softmax')
+    output_layer = dense(x)
+
+    sampling_model = Model([input_layer, initial_h, initial_c], [output_layer, h, c])
+    if save:
+        sampling_model.save("~/Limbo/generate_data/model_name.lstmmodel")
+    return sampling_model
