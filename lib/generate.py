@@ -13,53 +13,53 @@ from train import train_model
 from sample_line import sample_line
 
 
-# TODO: Make all these guys arguments
-max_sequence_length = 10
-max_vocab_size = 20000
-embedding_dim = 50
-validation_split = 0.2
-batch_size = 128
-# epochs = 3
-latent_dim = 25
-verbose = True  # Set up proper ogging
-
-
 def parse_args():
     parser = argparse.ArgumentParser(description="Args ")
     parser.add_argument('--file-path', type=str, default='~/data.txt')
     parser.add_argument('--epochs', type=int, default=3)
+    parser.add_argument('--latent-dim', type=int, default=100)
+    parser.add_argument('--batch-size', type=int, default=32)
+    parser.add_argument('--validation-split', type=float, default=0.2)
+    parser.add_argument('--word-embedding-path', type=str, default='~/datasets/glove/')
+    parser.add_argument('--word-embedding-dim', type=int, default=50)
+    parser.add_argument('--max-vocab-size', type=int, default=20000)
+    parser.add_argument('--max-sequence-length', type=int, default=10)
+    parser.add_argument('--verbose', action='store_true')
+    parser.add_argument('--prompt', type=str, default=None)
     return parser.parse_args()
 
 
 if __name__ == '__main__':
     args = parse_args()
 
+    latent_dim = args.latent_dim
+
     lines, input_texts, target_texts = load_input_texts(args.file_path)
-    word2vec_map = load_pretrained_wordvecs(embedding_dimension=embedding_dim)
+    word2vec_map = load_pretrained_wordvecs(embedding_dimension=args.word_embedding_dim)
 
-    input_sequences, target_sequences, tokenizer, word2idx, idx2word, max_sequence_length_from_data = \
-        tokenize_corpus(lines, input_texts, target_texts, max_vocab_size)
+    input_seq, target_seq, tokenizer, word2idx, idx2word, max_sequence_length_from_data = \
+        tokenize_corpus(lines, input_texts, target_texts, args.max_vocab_size)
 
-    input_sequences, target_sequences, max_sequence_length = prepare_sequences(
-        input_sequences, target_sequences, max_sequence_length_from_data, max_sequence_length)
+    input_seq, target_seq, max_sequence_length = prepare_sequences(
+        input_seq, target_seq, max_sequence_length_from_data, args.max_sequence_length)
 
     print(max_sequence_length)
 
     embedding_matrix, num_words = prep_embedding_matrix(
-        word2idx, word2vec_map, max_vocab_size, embedding_dim)
+        word2idx, word2vec_map, args.max_vocab_size, args.word_embedding_dim)
 
     one_hot_targets = generate_one_hot_targets(
-        input_sequences, target_sequences, max_sequence_length, num_words)
+        input_seq, target_seq, max_sequence_length, num_words)
 
-    embedding_layer = make_embedding_layer(embedding_matrix, embedding_dim, num_words)
+    embedding_layer = make_embedding_layer(embedding_matrix, args.word_embedding_dim, num_words)
 
     [input_, initial_h, initial_c], output = build_model(
         max_sequence_length, latent_dim, embedding_layer, num_words)
 
     model = compile_model(input_, initial_h, initial_c, output)
 
-    trained_model = train_model(model, one_hot_targets, input_sequences, latent_dim,
-                                batch_size, args.epochs, validation_split)
+    trained_model = train_model(model, one_hot_targets, input_seq, latent_dim,
+                                args.batch_size, args.epochs, args.validation_split)
 
     plt.plot(trained_model.history['loss'], label='loss')
     plt.plot(trained_model.history['val_loss'], label='val_loss')
@@ -75,12 +75,13 @@ if __name__ == '__main__':
     sampling_model = make_sample_model(embedding_layer, latent_dim,
                                        initial_h, initial_c, num_words)
 
-    # generate a 4 review
+    # generate a 4 line verse
     while True:
         for _ in range(4):
-            line = sample_line(sampling_model, latent_dim, word2idx, idx2word, max_sequence_length)
+            line = sample_line(sampling_model, latent_dim, word2idx,
+                               idx2word, max_sequence_length, prompt=args.prompt)
             print(line)
 
-        ans = input("---generate another? [Y/n]---")
+        ans = input("More lyrics? [Y/n]---")
         if ans and ans[0].lower().startswith('n'):
             break

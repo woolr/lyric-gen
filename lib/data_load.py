@@ -11,8 +11,8 @@ import numpy as np
 
 def load_input_texts(input_path):
     """
-
-
+    Load input texts line by line and prepend the start of sentence token "<sos>" and append the
+    end of sentence tokem "<eos>"
     """
     input_texts = []
     target_texts = []
@@ -32,7 +32,7 @@ def load_input_texts(input_path):
     return all_lines, input_texts, target_texts
 
 
-def load_pretrained_wordvecs(embedding_dimension=50):
+def load_pretrained_wordvecs(path_to_embeddings="/Users/dan/datasets", embedding_dimension=50):
     """
 
     Environ var that defines path to pre-trained models
@@ -46,12 +46,11 @@ def load_pretrained_wordvecs(embedding_dimension=50):
 
     # TODO: add env var for path to models
     # TODO: Proper Data Path
-    with open(os.path.join(
-        f'/Users/danielwoolridge/Learning/OMM/glove.6B/glove.6B.{str(embedding_dimension)}d.txt')
-    ) as f:
+    with open(os.path.join(path_to_embeddings,
+              f'glove6B/glove.6B/glove.6B.{str(embedding_dimension)}d.txt')) as f:
         # is just a space-separated text file in the format:
         # word vec[0] vec[1] vec[2] ...
-        # Output BERT word embeddings in this format?
+        # TODO: Output BERT word embeddings in this format?
         for line in f:
             values = line.split()
             word = values[0]

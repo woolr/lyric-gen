@@ -2,11 +2,12 @@
 import numpy as np
 
 
-def sample_line(sampling_model, latent_dimensions, word2idx, idx2word, max_sequence_length):
+def sample_line(sampling_model, latent_dimensions, word2idx, idx2word, max_sequence_length,
+                prompt=None):
     # initial inputs
     np_input = np.array([[word2idx['<sos>']]])
-    h = np.zeros((1, latent_dimensions))
-    c = np.zeros((1, latent_dimensions))
+    hidden = np.zeros((1, latent_dimensions))
+    cell = np.zeros((1, latent_dimensions))
 
     # so we know when to quit
     eos = word2idx['<eos>']
@@ -15,26 +16,21 @@ def sample_line(sampling_model, latent_dimensions, word2idx, idx2word, max_seque
     output_sentence = []
 
     for number in range(max_sequence_length):
-        o, h, c = sampling_model.predict([np_input, h, c])
+        out, hidden, cell = sampling_model.predict([np_input, hidden, cell])
+        if prompt:
+            prompt_words = prompt.split("-")
+            assert len(prompt_words) < 4
 
-        if number == 0:
-            word_one = word2idx['this']
-            output_sentence.append(idx2word.get(word_one, '<WTF %s>' % word_one))
-            continue
+            for i, word in enumerate(prompt_words):
+                word_i = word2idx[word]
+                output_sentence.append(idx2word.get(word_i, '<WTF %s>' % word_i))
+                if i == len(prompt_words):
+                    break
+            prompt = None
+            # print("out.shape:", out.shape, out[0, 0, :10])
+            idx = np.argmax(out[0, 0])
 
-        if number == 1:
-            word_one = word2idx['movie']
-            output_sentence.append(idx2word.get(word_one, '<WTF %s>' % word_one))
-            continue
-
-        if number == 2:
-            word_one = word2idx['is']
-            output_sentence.append(idx2word.get(word_one, '<WTF %s>' % word_one))
-            continue
-
-        # print("o.shape:", o.shape, o[0,0,:10])
-        # idx = np.argmax(o[0,0])
-        probs = o[0, 0]
+        probs = out[0, 0]
         if np.argmax(probs) == 0:
             print("wtf")
         probs[0] = 0
